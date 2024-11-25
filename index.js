@@ -1,4 +1,6 @@
 const express = require("express");// calling express
+const {userLogin, addCar} = require("./controller/userController")
+
 
 
 const server = express() //created server using express framework
@@ -11,12 +13,9 @@ res.send('server is running....')
 })
 
 //post apis
-server.post("/add",(req,res)=>{
-    const{name,year,color} = req.body
-    let response = `car name is ${name} having color ${color} and year ${year}`
-    res.send(response)
+server.post("/add",addCar)
 
-})
+server.post("/login",userLogin)
 
 
-server.listen(8080,()=>{console.log("server is running")})//listing the server
+server.listen(8080,(error)=>{console.log("server is running")})//listing the server
