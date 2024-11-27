@@ -1,13 +1,14 @@
 const express = require("express"); // calling express
 const mongoose = require("mongoose");
-const { register, userLogin } = require("./controller/userController");//importing controllers
+const userRouter =require("./routes/userRoutes")
 
 const server = express(); //created server using express framework
 server.use(express.json()); // middleware to parse body in json (making req.body readable to server)
 
 // api end points
-server.post("/register", register);
-server.post("/login", userLogin);
+server.use("/api",userRouter)
+
+
 
 server.listen(8080, async (error) => {
   try {
