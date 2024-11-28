@@ -1,67 +1,27 @@
 const User = require("../model/userModel");
-// ================login =================
-const userLogin = async (req, res) => {
-  const { email, password } = req.body; //getting data form body
-  try {
-    const finduser = await User.findOne({ email: email }); // finding user in data base and getting details
-    const check = finduser.password === password; //checking req.body.passwpord with received detail password
-    if (check) {
-      res.json("user logged in");
-    } else {
-      res.json("invalid email or password");
-    }
-  } catch {
-    res.json("failed");
+
+const registerUser = async (req, res) => {
+  const { fullname, email, mobile, password } = req.body;
+  if (
+    fullname === null ||
+    fullname === undefined ||
+    email === null ||
+    email === undefined ||
+    password === null ||
+    password === undefined ||
+    mobile === null ||
+    mobile === undefined
+  ) {
+    return res.status(400).json({ message: "Please fill all the fields" });
   }
-};
-
-const register = async (req, res) => {
-  const { fullname, email, password, mobile } = req.body;
-
-  // if (!fullname || !email || !password || !mobile) {
-  //   return res.json({
-  //     status: false,
-  //     message: "please fill all fields",
-  //     data: null,
-  //     statusCode: 401,
-  //   });
-  // }
-
   try {
-    const createUser = await User.create({ fullname, email, password, mobile });
-    res.json({
-      status: true,
-      message: "user registered successfully",
-      createUser,
-      statusCode: 201,
-    });
+    const user = await User.create(req.body);
+    res
+      .status(201)
+      .json({ status: true, message: "user registered", data: user });
   } catch (error) {
-    console.log(error.message);
-    res.json({
-      status: false,
-      message: "user registered failed",
-      createUser,
-      statusCode: 500,
-    });
+    res.status(500).json({ status: false, message: error.message, data: null });
   }
 };
 
-const getUsers = async (req, res) => {
-  try {
-    const usersDetail = await User.find().select("-password");
-    if (usersDetail.length < 1) {
-      res.json({
-        status: false,
-        message: "no user found",
-        data: null,
-        statusCode: 404,
-      });
-      return;
-    }
-    res.json(usersDetail);
-  } catch (error) {
-    res.json(error.message);
-  }
-};
-
-module.exports = { userLogin, register, getUsers };
+module.exports = { registerUser };
