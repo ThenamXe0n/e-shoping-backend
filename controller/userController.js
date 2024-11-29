@@ -16,12 +16,23 @@ const registerUser = async (req, res) => {
   }
   try {
     const user = await User.create(req.body);
+    const userDetail = await User.findById(user._id).select("-password")
     res
       .status(201)
-      .json({ status: true, message: "user registered", data: user });
+      .json({ status: true, message: "user registered", data: userDetail });
   } catch (error) {
     res.status(500).json({ status: false, message: error.message, data: null });
   }
 };
 
-module.exports = { registerUser };
+const loginUser = async(req,res)=>{
+  const {email,password} = req.body
+  try{
+    const user =await User.findOne({email:email,password:password}).select("-password")
+    res.status(200).json({status:true,message:"logged in successfully",user})
+  }catch(error){
+    res.status(500).json({status:false,message:error.message,data:null})
+  }
+}
+
+module.exports = { registerUser,loginUser };
