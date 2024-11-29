@@ -2,12 +2,14 @@ require("dotenv").config();
 const express = require("express"); // calling express
 const mongoose = require("mongoose");
 const userRouter = require("./routes/userRoutes");
+const productRouter =require("./routes/productRoutes")
 
 const server = express(); //created server using express framework
 server.use(express.json()); // middleware to parse body in json (making req.body readable to server)
 
 // api end points
 server.use("/api", userRouter);
+server.use("/product",productRouter)
 
 server.listen(8080, async (error) => {
   try {
